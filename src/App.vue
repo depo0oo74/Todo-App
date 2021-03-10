@@ -19,10 +19,10 @@
               <td>action</td>
             </tr>
             <tr v-for="todo in todos" :key="todo.index">
-              <td style="color : #6a6af2">{{ todo }}</td>
+              <td :class="todo.state" style="color : #6a6af2">{{ todo.name }}</td>
               <td>
-                <button class="btn complete">Complete</button> 
-                <button class="btn remove">Remove</button>
+                <button class="btn complete" @click="completeTodo(todo)">Complete</button> 
+                <button class="btn remove" @click="removeTodo(todo)">Remove</button>
               </td>
             </tr>
           </table>
@@ -31,25 +31,37 @@
     </div>
   </section>
 </template>
-<script>
 
+
+<script>
 export default {
-  
   name: 'App',
   data() {
     return {
       todoName : '',
-      todos : [] ,
+      todos : []
     }
   },
   methods : {
     addTodo() {
-      this.todos.push(this.todoName);
+      this.todos.push({
+        name : this.todoName ,
+        state : 'not-completed'
+      });
       this.todoName = ''
     },
-  },
+    removeTodo(todo) {
+      const todoIndex = this.todos.indexOf(todo);
+      this.todos.splice(todoIndex, 1);
+    },
+    completeTodo(todo) {
+      const todoIndex = this.todos.indexOf(todo);
+      this.todos[todoIndex].state = 'completed '
+    }
+  }
 }
 </script>
+
 
 <style scoped>
 button:focus, input:focus {
@@ -83,7 +95,7 @@ button:focus, input:focus {
 .todo-app table {
   margin-top: 20px;
 }
-.todo-app td.complete {
+.todo-app td.completed {
   text-decoration: line-through;
 }
 </style>
